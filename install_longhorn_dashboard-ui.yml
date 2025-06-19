@@ -1,4 +1,4 @@
-# install_longhorn.yml
+# install_longhorn_dashboard-ui.yml
 ---
 # 📦 Instalación completa de Longhorn con seguridad y exposición interna
 
