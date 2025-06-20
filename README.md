@@ -6,7 +6,7 @@ longhorn-dashboard-ui-ansible
 Para instalar este proyecto, ejecute el siguiente comando utilizando Ansible:
 
 ```bash
-ansible-playbook install_longhorn_dashboard-ui.yml
+sudo ansible-playbook install_longhorn_dashboard-ui.yml
 ```
 
 Este comando aplicará las configuraciones necesarias para desplegar el dashboard de Longhorn en su entorno.
