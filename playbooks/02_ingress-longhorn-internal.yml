@@ -24,10 +24,10 @@
         src: ../templates/longhorn/longhorn-dashboard-auth-middleware.yaml.j2  # Plantilla Jinja2 para el middleware de autenticación
         dest: "{{ rendered_auth_middleware_path }}"  # Archivo de salida con el middleware de autenticación
 
-    - name: 📄 Renderizar Middleware de stripPrefix
-      template:
-        src: ../templates/longhorn/strip-prefix-dashboard-middleware.yaml.j2  # Plantilla Jinja2 para el middleware stripPrefix
-        dest: "{{ rendered_strip_middleware_path }}"  # Archivo de salida con el middleware stripPrefix
+   # - name: 📄 Renderizar Middleware de stripPrefix
+   #   template:
+   #     src: ../templates/longhorn/strip-prefix-dashboard-middleware.yaml.j2  # Plantilla Jinja2 para el middleware stripPrefix
+   #     dest: "{{ rendered_strip_middleware_path }}"  # Archivo de salida con el middleware stripPrefix
 
     - name: 📄 Renderizar IngressRoute para el Dashboard
       template:
