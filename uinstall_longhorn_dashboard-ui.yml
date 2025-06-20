@@ -1,37 +1,41 @@
 # uinstall_longhorn_dashboard-ui.yml
+# ====================================================
+# 🧹 Desinstalación del Ingress, Middleware y Secret
+# ====================================================
 ---
-# 🧹 Desinstalación de recursos del Dashboard de Longhorn
-
 - name: 🧹 Desinstalar IngressRoute, Middleware y Secret de Longhorn
   hosts: localhost
   gather_facts: false
+
   vars_files:
     - vars/main.yml
 
   vars:
-    files_dir: "{{ playbook_dir }}/files"
-    sealed_secret_name: "{{ secret_name }}"
-    namespace: "{{ longhorn_namespace }}"
+    target_ns: "{{ longhorn_namespace }}"
     ingressroute_name: "ingressroute-longhorn-internal"
     middleware_name_to_delete: "{{ middleware_name }}"
+    sealed_secret_name: "{{ secret_name }}"
+    kubectl_path: "/usr/local/bin/kubectl"
+    files_dir: "{{ playbook_dir }}/playbooks/files"
+
+  environment:
+    KUBECONFIG: "{{ kubeconfig_path }}"
 
   tasks:
+
     - name: ❌ Eliminar IngressRoute del Dashboard
-      command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }}
-        delete ingressroute {{ ingressroute_name }} -n {{ namespace }}
+      shell: >
+        {{ kubectl_path }} delete ingressroute {{ ingressroute_name }} -n {{ target_ns }}
       ignore_errors: true
 
     - name: ❌ Eliminar Middleware de autenticación
-      command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }}
-        delete middleware {{ middleware_name_to_delete }} -n {{ namespace }}
+      shell: >
+        {{ kubectl_path }} delete middleware {{ middleware_name_to_delete }} -n {{ target_ns }}
       ignore_errors: true
 
     - name: ❌ Eliminar SealedSecret del Dashboard
-      command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }}
-        delete sealedsecret {{ sealed_secret_name }} -n {{ namespace }}
+      shell: >
+        {{ kubectl_path }} delete sealedsecret {{ sealed_secret_name }} -n {{ target_ns }}
       ignore_errors: true
 
     - name: 🧹 Eliminar archivos locales renderizados
@@ -43,4 +47,3 @@
         - "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
         - "{{ files_dir }}/longhorn-dashboard-secret.yaml"
         - "{{ files_dir }}/longhorn-dashboard-sealed.yaml"
-      ignore_errors: true

@@ -1,5 +1,4 @@
 # install_longhorn_dashboard-ui.yml
----
 # 📦 Instalación completa de Longhorn con seguridad y exposición interna
 
 - name: 🚀 Instalar y configurar Longhorn con Ingress y autenticación
@@ -14,18 +13,18 @@
         that: kubeconfig_path is defined
         msg: "❌ kubeconfig_path no está definido en vars/main.yml"
 
-# El bloque de tareas se reemplaza por importación de playbooks
-# usando import_playbook en lugar de import_tasks
-
+# 🧩 Importar playbooks principales (deben tener sus propios hosts y tasks)
 - import_playbook: playbooks/01_generate-auth-secret.yml
 
 - import_playbook: playbooks/02_ingress-longhorn-internal.yml
 
+# 🌐 Verificación tolerante de acceso al dashboard
 - name: 🌐 Verificar acceso al Dashboard (modo tolerante)
   hosts: localhost
   gather_facts: false
   vars_files:
     - vars/main.yml
+
   tasks:
     - name: 🌐 Verificar acceso al Dashboard (modo tolerante)
       shell: >
