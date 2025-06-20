@@ -23,7 +23,7 @@ spec:
           namespace: {{ longhorn_namespace | default("longhorn-system") }}
       services:
         - name: longhorn-frontend
-          port: 8000  # Cambié el puerto a 8000
+          port: 80  # Cambié el puerto a 80
           scheme: http
     - match: "Host(`{{ domain | default('longhorn.socialdevs.site') }}`) && PathPrefix(`/dashboard`)"
       kind: Rule
@@ -34,7 +34,7 @@ spec:
           namespace: {{ longhorn_namespace | default("longhorn-system") }}
       services:
         - name: longhorn-frontend
-          port: 8000  # Cambié el puerto a 8000
+          port: 80  # Cambié el puerto a 80
           scheme: http
   tls:
     secretName: {{ tls_secret_name | default("wildcard-socialdevs-tls") }}
