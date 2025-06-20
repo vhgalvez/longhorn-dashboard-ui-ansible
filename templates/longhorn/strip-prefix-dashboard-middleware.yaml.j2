@@ -1,0 +1,18 @@
+# templates\longhorn\strip-prefix-dashboard-middleware.yaml.j2
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix-dashboard
+  namespace: {{ longhorn_namespace | default("longhorn-system") }}
+  labels:
+    app.kubernetes.io/name: longhorn
+    app.kubernetes.io/component: middleware
+    access: internal
+    environment: prod
+  annotations:
+    maintained-by: devops@socialdevs.site
+    created-by: ansible
+spec:
+  stripPrefix:
+    prefixes:
+      - "/dashboard"

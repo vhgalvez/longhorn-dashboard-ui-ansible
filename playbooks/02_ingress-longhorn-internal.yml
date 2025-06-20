@@ -13,28 +13,44 @@
     kubeconfig_path: "/home/victory/.kube/config"
     kubectl_path: "/usr/local/bin/kubectl"
     files_dir: "{{ playbook_dir }}/files"
-    rendered_middleware_path: "{{ files_dir }}/longhorn-dashboard-auth.yaml"
+    rendered_auth_middleware_path: "{{ files_dir }}/longhorn-dashboard-auth.yaml"
+    rendered_strip_middleware_path: "{{ files_dir }}/strip-prefix-dashboard.yaml"
     rendered_ingressroute_path: "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
 
   tasks:
     - name: 📄 Renderizar Middleware de autenticación
       template:
         src: ../templates/longhorn/longhorn-dashboard-auth-middleware.yaml.j2
-        dest: "{{ rendered_middleware_path }}"
+        dest: "{{ rendered_auth_middleware_path }}"
+
+    - name: 📄 Renderizar Middleware de stripPrefix
+      template:
+        src: ../templates/longhorn/strip-prefix-dashboard-middleware.yaml.j2
+        dest: "{{ rendered_strip_middleware_path }}"
 
     - name: 📄 Renderizar IngressRoute para el Dashboard
       template:
         src: ../templates/longhorn/longhorn-dashboard-ingressroute-internal.yaml.j2
         dest: "{{ rendered_ingressroute_path }}"
 
-    - name: 🚀 Mostrar diff del Middleware (modo check)
+    - name: 🚀 Mostrar diff del Middleware (auth) (modo check)
       command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ rendered_middleware_path }}"
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ rendered_auth_middleware_path }}"
       when: ansible_check_mode
 
     - name: 🚀 Aplicar Middleware (auth)
       command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ rendered_middleware_path }}"
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ rendered_auth_middleware_path }}"
+      when: not ansible_check_mode
+
+    - name: 🚀 Mostrar diff del Middleware (stripPrefix) (modo check)
+      command: >
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ rendered_strip_middleware_path }}"
+      when: ansible_check_mode
+
+    - name: 🚀 Aplicar Middleware (stripPrefix)
+      command: >
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ rendered_strip_middleware_path }}"
       when: not ansible_check_mode
 
     - name: 🚀 Mostrar diff del IngressRoute (modo check)
