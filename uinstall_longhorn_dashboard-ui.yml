@@ -15,27 +15,33 @@
     ingressroute_name: "ingressroute-longhorn-internal"
     middleware_name_to_delete: "{{ middleware_name }}"
     sealed_secret_name: "{{ secret_name }}"
+    secret_name_to_delete: "{{ secret_name }}"
     kubectl_path: "/usr/local/bin/kubectl"
-    files_dir: "{{ playbook_dir }}/playbooks/files"
+    files_dir: "{{ playbook_dir }}/files"
 
   environment:
     KUBECONFIG: "{{ kubeconfig_path }}"
+    PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
   tasks:
-
     - name: ❌ Eliminar IngressRoute del Dashboard
       shell: >
-        {{ kubectl_path }} delete ingressroute {{ ingressroute_name }} -n {{ target_ns }}
+        {{ kubectl_path }} delete ingressroute {{ ingressroute_name }} -n {{ target_ns }} --ignore-not-found
       ignore_errors: true
 
     - name: ❌ Eliminar Middleware de autenticación
       shell: >
-        {{ kubectl_path }} delete middleware {{ middleware_name_to_delete }} -n {{ target_ns }}
+        {{ kubectl_path }} delete middleware {{ middleware_name_to_delete }} -n {{ target_ns }} --ignore-not-found
       ignore_errors: true
 
     - name: ❌ Eliminar SealedSecret del Dashboard
       shell: >
-        {{ kubectl_path }} delete sealedsecret {{ sealed_secret_name }} -n {{ target_ns }}
+        {{ kubectl_path }} delete sealedsecret {{ sealed_secret_name }} -n {{ target_ns }} --ignore-not-found
+      ignore_errors: true
+
+    - name: ❌ Eliminar Secret del Dashboard
+      shell: >
+        {{ kubectl_path }} delete secret {{ secret_name_to_delete }} -n {{ target_ns }} --ignore-not-found
       ignore_errors: true
 
     - name: 🧹 Eliminar archivos locales renderizados
