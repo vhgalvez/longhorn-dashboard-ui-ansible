@@ -10,55 +10,61 @@
     - ../vars/main.yml
 
   vars:
-    kubeconfig_path: "/home/victory/.kube/config"
-    kubectl_path: "/usr/local/bin/kubectl"
-    files_dir: "{{ playbook_dir }}/files"
-    rendered_auth_middleware_path: "{{ files_dir }}/longhorn-dashboard-auth.yaml"
-    rendered_strip_middleware_path: "{{ files_dir }}/strip-prefix-dashboard.yaml"
-    rendered_ingressroute_path: "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
+    kubeconfig_path: "/home/victory/.kube/config"  # Ruta del kubeconfig
+    kubectl_path: "/usr/local/bin/kubectl"        # Ruta de kubectl
+    files_dir: "{{ playbook_dir }}/files"         # Directorio de archivos generados
+    rendered_auth_middleware_path: "{{ files_dir }}/longhorn-dashboard-auth.yaml"  # Archivo de middleware de autenticación
+    rendered_strip_middleware_path: "{{ files_dir }}/strip-prefix-dashboard.yaml"  # Archivo de middleware para stripPrefix
+    rendered_ingressroute_path: "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"  # Archivo de IngressRoute
 
   tasks:
     - name: 📄 Renderizar Middleware de autenticación
       template:
-        src: ../templates/longhorn/longhorn-dashboard-auth-middleware.yaml.j2
-        dest: "{{ rendered_auth_middleware_path }}"
+        src: ../templates/longhorn/longhorn-dashboard-auth-middleware.yaml.j2  # Plantilla Jinja2 para el middleware de autenticación
+        dest: "{{ rendered_auth_middleware_path }}"  # Archivo de salida con el middleware de autenticación
 
     - name: 📄 Renderizar Middleware de stripPrefix
       template:
-        src: ../templates/longhorn/strip-prefix-dashboard-middleware.yaml.j2
-        dest: "{{ rendered_strip_middleware_path }}"
+        src: ../templates/longhorn/strip-prefix-dashboard-middleware.yaml.j2  # Plantilla Jinja2 para el middleware stripPrefix
+        dest: "{{ rendered_strip_middleware_path }}"  # Archivo de salida con el middleware stripPrefix
 
     - name: 📄 Renderizar IngressRoute para el Dashboard
       template:
-        src: ../templates/longhorn/longhorn-dashboard-ingressroute-internal.yaml.j2
-        dest: "{{ rendered_ingressroute_path }}"
+        src: ../templates/longhorn/longhorn-dashboard-ingressroute-internal.yaml.j2  # Plantilla Jinja2 para IngressRoute
+        dest: "{{ rendered_ingressroute_path }}"  # Archivo de salida con el IngressRoute
 
+    # Mostrar las diferencias del Middleware (auth) en modo check
     - name: 🚀 Mostrar diff del Middleware (auth) (modo check)
       command: >
         {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ rendered_auth_middleware_path }}"
-      when: ansible_check_mode
+      when: ansible_check_mode  # Solo en modo check
 
+    # Aplicar Middleware de autenticación
     - name: 🚀 Aplicar Middleware (auth)
       command: >
         {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ rendered_auth_middleware_path }}"
-      when: not ansible_check_mode
+      when: not ansible_check_mode  # Solo en modo ejecución real
 
+    # Mostrar las diferencias del Middleware (stripPrefix) en modo check
     - name: 🚀 Mostrar diff del Middleware (stripPrefix) (modo check)
       command: >
         {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ rendered_strip_middleware_path }}"
-      when: ansible_check_mode
+      when: ansible_check_mode  # Solo en modo check
 
+    # Aplicar Middleware de stripPrefix
     - name: 🚀 Aplicar Middleware (stripPrefix)
       command: >
         {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ rendered_strip_middleware_path }}"
-      when: not ansible_check_mode
+      when: not ansible_check_mode  # Solo en modo ejecución real
 
+    # Mostrar las diferencias del IngressRoute en modo check
     - name: 🚀 Mostrar diff del IngressRoute (modo check)
       command: >
         {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ rendered_ingressroute_path }}"
-      when: ansible_check_mode
+      when: ansible_check_mode  # Solo en modo check
 
+    # Aplicar IngressRoute para Longhorn Dashboard
     - name: 🚀 Aplicar IngressRoute
       command: >
         {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ rendered_ingressroute_path }}"
-      when: not ansible_check_mode
+      when: not ansible_check_mode  # Solo en modo ejecución real

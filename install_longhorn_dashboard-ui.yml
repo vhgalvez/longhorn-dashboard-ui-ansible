@@ -15,7 +15,6 @@
 
 # 🧩 Importar playbooks principales (deben tener sus propios hosts y tasks)
 - import_playbook: playbooks/01_generate-auth-secret.yml
-
 - import_playbook: playbooks/02_ingress-longhorn-internal.yml
 
 # 🌐 Verificación tolerante de acceso al dashboard
