@@ -11,40 +11,38 @@
 
   vars:
     kubeconfig_path: "/home/victory/.kube/config"
-    kubeseal_path: "/usr/local/bin/kubeseal"
     kubectl_path: "/usr/local/bin/kubectl"
-    python_bin: "/usr/bin/python3"
     files_dir: "{{ playbook_dir }}/files"
-    rendered_secret_path: "{{ files_dir }}/longhorn-dashboard-secret.yaml"
-    sealed_secret_path: "{{ files_dir }}/longhorn-dashboard-sealed.yaml"
+    rendered_middleware_path: "{{ files_dir }}/longhorn-dashboard-auth.yaml"
+    rendered_ingressroute_path: "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
 
   tasks:
     - name: 📄 Renderizar Middleware de autenticación
       template:
-        src: templates/longhorn/longhorn-dashboard-auth-middleware.yaml.j2
-        dest: "{{ files_dir }}/longhorn-dashboard-auth.yaml"
+        src: ../templates/longhorn/longhorn-dashboard-auth-middleware.yaml.j2
+        dest: "{{ rendered_middleware_path }}"
 
     - name: 📄 Renderizar IngressRoute para el Dashboard
       template:
-        src: templates/longhorn/longhorn-dashboard-ingressroute-internal.yaml.j2
-        dest: "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
+        src: ../templates/longhorn/longhorn-dashboard-ingressroute-internal.yaml.j2
+        dest: "{{ rendered_ingressroute_path }}"
 
     - name: 🚀 Mostrar diff del Middleware (modo check)
       command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ files_dir }}/longhorn-dashboard-auth.yaml"
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ rendered_middleware_path }}"
       when: ansible_check_mode
 
     - name: 🚀 Aplicar Middleware (auth)
       command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ files_dir }}/longhorn-dashboard-auth.yaml"
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ rendered_middleware_path }}"
       when: not ansible_check_mode
 
     - name: 🚀 Mostrar diff del IngressRoute (modo check)
       command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ rendered_ingressroute_path }}"
       when: ansible_check_mode
 
     - name: 🚀 Aplicar IngressRoute
       command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ rendered_ingressroute_path }}"
       when: not ansible_check_mode
