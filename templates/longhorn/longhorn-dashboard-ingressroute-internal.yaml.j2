@@ -3,7 +3,7 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: ingressroute-longhorn-internal
-  namespace: {{ longhorn_namespace }}
+  namespace: {{ longhorn_namespace | default("longhorn-system") }}
   labels:
     app.kubernetes.io/name: longhorn
     app.kubernetes.io/component: ingress
@@ -16,12 +16,14 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: "Host(`{{ domain }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+    - match: "Host(`{{ domain | default('longhorn.socialdevs.site') }}`)"
       kind: Rule
       middlewares:
         - name: {{ middleware_name | default("longhorn-dashboard-auth") }}
-          namespace: {{ longhorn_namespace }}
+          namespace: {{ longhorn_namespace | default("longhorn-system") }}
       services:
         - name: longhorn-frontend
           port: 80
           scheme: http
+  tls:
+    secretName: {{ tls_secret_name | default("wildcard-socialdevs-tls") }}
