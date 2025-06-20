@@ -16,6 +16,7 @@
     rendered_auth_middleware_path: "{{ files_dir }}/longhorn-dashboard-auth.yaml"  # Archivo de middleware de autenticación
     rendered_strip_middleware_path: "{{ files_dir }}/strip-prefix-dashboard.yaml"  # Archivo de middleware para stripPrefix
     rendered_ingressroute_path: "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"  # Archivo de IngressRoute
+    rendered_tlsstore_path: "{{ files_dir }}/longhorn-tlsstore.yaml"  # Archivo del TLSStore
 
   tasks:
     - name: 📄 Renderizar Middleware de autenticación
@@ -67,4 +68,16 @@
     - name: 🚀 Aplicar IngressRoute
       command: >
         {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ rendered_ingressroute_path }}"
+      when: not ansible_check_mode  # Solo en modo ejecución real
+
+    # 📄 Renderizar TLSStore para Longhorn
+    - name: 📄 Renderizar TLSStore
+      template:
+        src: ../templates/longhorn/longhorn-tlsstore.yaml.j2  # Plantilla Jinja2 para el TLSStore
+        dest: "{{ rendered_tlsstore_path }}"  # Archivo de salida con el TLSStore
+
+    # 🚀 Aplicar TLSStore
+    - name: 🚀 Aplicar TLSStore
+      command: >
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply -f "{{ rendered_tlsstore_path }}"
       when: not ansible_check_mode  # Solo en modo ejecución real
