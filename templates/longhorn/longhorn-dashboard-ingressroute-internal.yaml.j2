@@ -16,7 +16,6 @@ spec:
   entryPoints:
     - websecure
   routes:
-    # Ruta principal para Longhorn UI (recomendado)
     - match: "Host(`{{ domain | default('longhorn.socialdevs.site') }}`) && PathPrefix(`/`)"
       kind: Rule
       middlewares:
@@ -26,8 +25,6 @@ spec:
         - name: longhorn-frontend
           port: 80
           scheme: http
-
-    # Ruta alternativa con /dashboard (opcional)
     - match: "Host(`{{ domain | default('longhorn.socialdevs.site') }}`) && PathPrefix(`/dashboard`)"
       kind: Rule
       middlewares:
@@ -39,6 +36,5 @@ spec:
         - name: longhorn-frontend
           port: 80
           scheme: http
-
   tls:
     secretName: {{ tls_secret_name | default("wildcard-socialdevs-tls") }}
