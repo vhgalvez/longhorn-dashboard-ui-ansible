@@ -1,19 +1,23 @@
 # vars/main.yml
 
-# Credenciales de autenticación para el dashboard
+# 🔐 Credenciales de autenticación básica para el Longhorn Dashboard
 longhorn_auth_user: admin
 longhorn_auth_pass: SuperSecure456
 
-# Namespace común para Longhorn y los recursos de Traefik
-longhorn_namespace: "longhorn-system"
+# 🌐 Dominio y namespace donde se desplegará el Dashboard
+domain: longhorn.socialdevs.site
+longhorn_namespace: longhorn-system
 
-# Configuración de autenticación e Ingress
+# 🛡️ Nombres del Middleware y Secret sellado
 middleware_name: longhorn-dashboard-auth
 secret_name: longhorn-dashboard-auth
-domain: longhorn.socialdevs.site
 
-
+# 📁 Ruta del kubeconfig y token de acceso al clúster (usado por kubectl/kubeseal)
 kubeconfig_path: "/home/victory/.kube/config"
 kubeconfig_token_path: "/home/victory/.kube/token.jwt"
+
+# 📡 Dirección VIP del clúster Kubernetes (útil para balanceo o HA)
 vip_kubernetes: "192.168.0.32"
+
+# ⚙️ Ruta del binario kubectl
 kubectl_path: "/usr/local/bin/kubectl"
