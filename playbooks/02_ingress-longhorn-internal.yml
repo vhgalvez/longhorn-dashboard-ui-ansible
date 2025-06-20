@@ -1,5 +1,6 @@
 # playbooks/02_ingress-longhorn-internal.yml
----
+# 🚪 2 - Exponer Longhorn Dashboard con IngressRoute Interno y Autenticación
+
 - name: 🚪 2 - Exponer Longhorn Dashboard con IngressRoute Interno y Autenticación
   hosts: localhost
   become: false
@@ -30,24 +31,20 @@
 
     - name: 🚀 Mostrar diff del Middleware (modo check)
       command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }}
-        diff -f "{{ files_dir }}/longhorn-dashboard-auth.yaml"
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ files_dir }}/longhorn-dashboard-auth.yaml"
       when: ansible_check_mode
 
     - name: 🚀 Aplicar Middleware (auth)
       command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }}
-        apply --validate=false -f "{{ files_dir }}/longhorn-dashboard-auth.yaml"
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ files_dir }}/longhorn-dashboard-auth.yaml"
       when: not ansible_check_mode
 
     - name: 🚀 Mostrar diff del IngressRoute (modo check)
       command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }}
-        diff -f "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} diff -f "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
       when: ansible_check_mode
 
     - name: 🚀 Aplicar IngressRoute
       command: >
-        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }}
-        apply --validate=false -f "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
+        {{ kubectl_path }} --kubeconfig {{ kubeconfig_path }} apply --validate=false -f "{{ files_dir }}/longhorn-dashboard-ingressroute.yaml"
       when: not ansible_check_mode

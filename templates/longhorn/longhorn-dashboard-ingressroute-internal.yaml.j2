@@ -19,8 +19,9 @@ spec:
     - match: "Host(`{{ domain }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
       kind: Rule
       middlewares:
-        - name: {{ middleware_name }}
+        - name: {{ middleware_name | default("longhorn-auth-middleware") }}
           namespace: {{ longhorn_namespace }}
       services:
         - name: longhorn-frontend
           port: 80
+          scheme: http
