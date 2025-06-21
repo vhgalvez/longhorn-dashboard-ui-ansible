@@ -264,4 +264,4 @@ Reinicia Traefik y verifica los logs para asegurarte de que el error esté resue
 Siguiendo estos pasos, deberías poder solucionar el problema con la configuración de TLS en Traefik y el middleware de autenticación para el dashboard de Longhorn.
 
 
-Aquí tienes el playbook corregido y mejorado para asegurarte de que la configuración del Secret de autenticación y TLS Store sea válida y funcional en el entorno de Longhorn Dashboard con Traefik:
+hay que hacer esto el playbook corregido y mejorado para asegurarte de que la configuración del Secret de autenticación y TLS Store sea válida y funcional en el entorno de Longhorn Dashboard con Traefik:

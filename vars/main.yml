@@ -1,7 +1,11 @@
 # vars/main.yml
+
+# vars/main.yml
+
 # Credenciales de autenticación básica para el Longhorn Dashboard
+# **Recomendación: Usar un sistema de gestión de secretos para mayor seguridad**
 longhorn_auth_user: admin
-longhorn_auth_pass: SuperSecure456  # Considera usar un sistema de gestión de secretos para mayor seguridad
+longhorn_auth_pass: "{{ lookup('env', 'LONGHORN_AUTH_PASS') }}"  # Usar variable de entorno para evitar hardcodear la contraseña
 
 # Dominio y namespace donde se desplegará el Dashboard
 domain: longhorn.socialdevs.site
@@ -24,3 +28,6 @@ kubeseal_path: "/usr/local/bin/kubeseal"  # Asegúrate de que kubeseal esté cor
 
 # TLS Secret creado en Kubernetes
 tls_secret_name: wildcard-socialdevs-tls  # El Secret TLS que contiene el certificado y la clave privada
+
+# Configuración opcional de redirección automática HTTP -> HTTPS
+http_to_https_redirect: true  # Si deseas redirigir automáticamente todo el tráfico HTTP a HTTPS

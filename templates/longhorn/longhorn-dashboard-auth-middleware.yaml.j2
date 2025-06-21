@@ -14,7 +14,6 @@ metadata:
     created-by: ansible
 spec:
   basicAuth:
-    # Validar que el secret_name esté correctamente configurado y disponible
     usersSecret: {{ secret_name | default("longhorn-dashboard-auth") }}  # Secret para la autenticación básica
     realm: "Longhorn UI"
     removeHeader: true  # Eliminar la cabecera de autenticación básica para mayor seguridad
