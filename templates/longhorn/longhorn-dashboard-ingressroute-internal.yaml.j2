@@ -23,7 +23,7 @@ spec:
           namespace: {{ longhorn_namespace | default("longhorn-system") }}  # Namespace para el middleware
       services:
         - name: longhorn-frontend
-          port: 8000  # Puerto 8000 configurado en el servicio de Kubernetes
+          port: 80
           scheme: http  # Utilizamos HTTP internamente, ya que TLS se maneja por el IngressRoute
     - match: "Host(`{{ domain | default('longhorn.socialdevs.site') }}`) && PathPrefix(`/dashboard`)"
       kind: Rule
@@ -34,7 +34,7 @@ spec:
           namespace: {{ longhorn_namespace | default("longhorn-system") }}  # Namespace para el middleware
       services:
         - name: longhorn-frontend
-          port: 8000  # Puerto 8000 configurado en el servicio de Kubernetes
+          port: 80
           scheme: http  # Utilizamos HTTP internamente
   tls:
     secretName: {{ tls_secret_name | default("wildcard-socialdevs-tls") }}  # Referencia al Secret TLS que contiene el certificado
