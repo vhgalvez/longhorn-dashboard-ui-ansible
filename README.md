@@ -94,3 +94,6 @@ Ahora que las variables de entorno están cargadas, puedes ejecutar los playbook
 ```bash
 ansible-playbook -i inventory/hosts.ini playbooks/02_ingress-longhorn-internal.yml
 ```
+
+TLS global 
+TLSStore 
