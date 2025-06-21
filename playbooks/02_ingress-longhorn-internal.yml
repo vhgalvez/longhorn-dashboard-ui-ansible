@@ -1,6 +1,5 @@
 # playbooks/02_ingress-longhorn-internal.yml
 # 🚪 Exponer Longhorn Dashboard con IngressRoute Interno y Autenticación
-
 - name: 🚪 Exponer Longhorn Dashboard con IngressRoute Interno y Autenticación
   hosts: localhost
   become: false
