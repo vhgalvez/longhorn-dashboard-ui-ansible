@@ -15,27 +15,31 @@ metadata:
 spec:
   entryPoints:
     - websecure  # Usamos websecure para habilitar el tráfico HTTPS
+
   routes:
     - match: "Host(`{{ domain | default('longhorn.socialdevs.site') }}`) && PathPrefix(`/`)"
       kind: Rule
       middlewares:
-        - name: {{ middleware_name | default("longhorn-dashboard-auth") }}  # Middleware de autenticación básica
-          namespace: {{ longhorn_namespace | default("longhorn-system") }}  # Namespace para el middleware
+        - name: {{ middleware_name | default("longhorn-dashboard-auth") }}
+          namespace: {{ longhorn_namespace | default("longhorn-system") }}
       services:
         - name: longhorn-frontend
-          port: 80  # Usamos el puerto 80, que es el que está expuesto en el servicio
-          scheme: http  # Utilizamos HTTP internamente, ya que TLS se maneja por el IngressRoute
+          port: 80
+          scheme: http
+
     - match: "Host(`{{ domain | default('longhorn.socialdevs.site') }}`) && PathPrefix(`/dashboard`)"
       kind: Rule
       middlewares:
-        - name: {{ middleware_name | default("longhorn-dashboard-auth") }}  # Middleware de autenticación básica
-          namespace: {{ longhorn_namespace | default("longhorn-system") }}  # Namespace para el middleware
-        - name: strip-prefix-dashboard  # Middleware para quitar el prefijo /dashboard
-          namespace: {{ longhorn_namespace | default("longhorn-system") }}  # Namespace para el middleware
+        - name: {{ middleware_name | default("longhorn-dashboard-auth") }}
+          namespace: {{ longhorn_namespace | default("longhorn-system") }}
+        - name: strip-prefix-dashboard
+          namespace: {{ longhorn_namespace | default("longhorn-system") }}
       services:
         - name: longhorn-frontend
-          port: 80  # Usamos el puerto 80 para que coincida con el servicio de Longhorn
-          scheme: http  # Utilizamos HTTP internamente
+          port: 80
+          scheme: http
+
   tls:
+    # Referencia correcta al TLSStore global en kube-system
     options:
-      name: default@kubernetescrd  # Usamos el TLSStore global configurado para Traefik
+      name: kube-system-default@kubernetescrd
