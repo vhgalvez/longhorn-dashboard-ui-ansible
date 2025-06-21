@@ -1,9 +1,0 @@
-# templates\longhorn\longhorn-tlsstore.yaml
-apiVersion: traefik.io/v1alpha1
-kind: TLSStore
-metadata:
-  name: default
-  namespace: kube-system  # Asegúrate de que esté en el namespace correcto
-spec:
-  defaultCertificate:
-    secretName: wildcard-socialdevs-tls  # Nombre del Secret TLS que contiene el certificado

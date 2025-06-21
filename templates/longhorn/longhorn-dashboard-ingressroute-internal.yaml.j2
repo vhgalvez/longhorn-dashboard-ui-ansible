@@ -23,7 +23,7 @@ spec:
           namespace: {{ longhorn_namespace | default("longhorn-system") }}  # Namespace para el middleware
       services:
         - name: longhorn-frontend
-          port: 80
+          port: 80  # Usamos el puerto 80, que es el que está expuesto en el servicio
           scheme: http  # Utilizamos HTTP internamente, ya que TLS se maneja por el IngressRoute
     - match: "Host(`{{ domain | default('longhorn.socialdevs.site') }}`) && PathPrefix(`/dashboard`)"
       kind: Rule
@@ -34,9 +34,10 @@ spec:
           namespace: {{ longhorn_namespace | default("longhorn-system") }}  # Namespace para el middleware
       services:
         - name: longhorn-frontend
-          port: 80
+          port: 80  # Usamos el puerto 80 para que coincida con el servicio de Longhorn
           scheme: http  # Utilizamos HTTP internamente
   tls:
-    secretName: {{ tls_secret_name | default("wildcard-socialdevs-tls") }}  # Referencia al Secret TLS que contiene el certificado
+    # Eliminar la línea `secretName` para usar el TLS global
+    # secretName: {{ tls_secret_name | default("wildcard-socialdevs-tls") }}  # Eliminar esta línea para usar TLS global
     options:
-      name: default@kubernetescrd  # Utilizamos el TLSStore global configurado para Traefik
+      name: default@kubernetescrd  # Usamos el TLSStore global configurado para Traefik
