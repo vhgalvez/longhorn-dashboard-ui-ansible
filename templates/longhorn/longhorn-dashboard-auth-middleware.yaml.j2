@@ -3,7 +3,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: {{ middleware_name | default("longhorn-dashboard-auth") }}
-  namespace: {{ longhorn_namespace | default("longhorn-system") }}
+  namespace: {{ longhorn_namespace | default("longhorn-system") }}  # Namespace por defecto, asegúrate que sea el correcto
   labels:
     app.kubernetes.io/name: longhorn
     app.kubernetes.io/component: middleware
@@ -14,6 +14,7 @@ metadata:
     created-by: ansible
 spec:
   basicAuth:
-    usersSecret: {{ secret_name | default("longhorn-dashboard-auth") }}
+    # Validar que el secret_name esté correctamente configurado y disponible
+    usersSecret: {{ secret_name | default("longhorn-dashboard-auth") }}  # Secret para la autenticación básica
     realm: "Longhorn UI"
-    removeHeader: true
+    removeHeader: true  # Eliminar la cabecera de autenticación básica para mayor seguridad

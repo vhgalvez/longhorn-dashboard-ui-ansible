@@ -1,6 +1,4 @@
-# install_longhorn_dashboard-ui.yml
 # 📦 Instalación completa de Longhorn con seguridad y exposición interna
-
 - name: 🚀 Instalar y configurar Longhorn con Ingress y autenticación
   hosts: localhost
   gather_facts: false
@@ -37,4 +35,23 @@
         dashboard_access_check.stdout is defined and
         dashboard_access_check.stdout not in ["200", "302", "401"]
       changed_when: false
-      ignore_errors: true
+      ignore_errors: false
+
+    - name: 🛠️ Depuración de acceso al dashboard
+      debug:
+        msg: "Código HTTP recibido del dashboard: {{ dashboard_access_check.stdout }}"
+
+    - name: ❌ Fallar si no se puede acceder al dashboard
+      fail:
+        msg: "El acceso al dashboard falló. Código HTTP: {{ dashboard_access_check.stdout }}"
+      when: dashboard_access_check.stdout not in ["200", "302", "401"]
+      
+    - name: 🔍 Verificar si el IngressRoute está correctamente aplicado
+      shell: >
+        {{ kubectl_path }} get ingressroute ingressroute-longhorn-internal -n {{ longhorn_namespace | default("longhorn-system") }} --kubeconfig {{ kubeconfig_path }}
+      register: ingress_check
+      changed_when: false
+
+    - name: 🧾 Mostrar el estado del IngressRoute
+      debug:
+        msg: "Estado del IngressRoute: {{ ingress_check.stdout }}"

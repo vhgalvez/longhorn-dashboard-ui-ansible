@@ -1,27 +1,26 @@
 # vars/main.yml
-
-# 🔐 Credenciales de autenticación básica para el Longhorn Dashboard
+# Credenciales de autenticación básica para el Longhorn Dashboard
 longhorn_auth_user: admin
 longhorn_auth_pass: SuperSecure456  # Considera usar un sistema de gestión de secretos para mayor seguridad
 
-# 🌐 Dominio y namespace donde se desplegará el Dashboard
+# Dominio y namespace donde se desplegará el Dashboard
 domain: longhorn.socialdevs.site
 longhorn_namespace: longhorn-system
 
-# 🛡️ Nombres del Middleware y Secret sellado
+# Nombres del Middleware y Secret sellado
 middleware_name: longhorn-dashboard-auth
 secret_name: longhorn-dashboard-auth
 
-# 📁 Ruta del kubeconfig y token de acceso al clúster (usado por kubectl/kubeseal)
+# Ruta del kubeconfig y token de acceso al clúster (usado por kubectl/kubeseal)
 kubeconfig_path: "/home/victory/.kube/config"
 kubeconfig_token_path: "/home/victory/.kube/token.jwt"  # Asegúrate de que este archivo esté bien protegido
 
-# 📡 Dirección VIP del clúster Kubernetes (útil para balanceo o HA)
+# Dirección VIP del clúster Kubernetes (útil para balanceo o HA)
 vip_kubernetes: "192.168.0.32"  # Asegúrate de que esta dirección esté correctamente configurada y accesible
 
-# ⚙️ Ruta del binario kubectl y kubeseal
+# Ruta del binario kubectl y kubeseal
 kubectl_path: "/usr/local/bin/kubectl"
 kubeseal_path: "/usr/local/bin/kubeseal"  # Asegúrate de que kubeseal esté correctamente instalado y accesible
 
-tls_cert_base64: "MIICjjCCAnOgAwIBAgIUW...TU_CADENA_BASE64_DEL_CERTIFICADO_REAL...D3Qj+q0j"
-tls_key_base64: "MIIEvQIBADANBgkqhkiG9w0BAQ...TU_CADENA_BASE64_DE_LA_CLAVE_PRIVADA_REAL...8oP6g=="
+# TLS Secret creado en Kubernetes
+tls_secret_name: wildcard-socialdevs-tls  # El Secret TLS que contiene el certificado y la clave privada
