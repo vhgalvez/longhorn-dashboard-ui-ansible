@@ -95,5 +95,9 @@ Ahora que las variables de entorno están cargadas, puedes ejecutar los playbook
 ansible-playbook -i inventory/hosts.ini playbooks/02_ingress-longhorn-internal.yml
 ```
 
+
+export LONGHORN_AUTH_USER=admin
+export LONGHORN_AUTH_PASS='SuperPassword123'
+
 TLS global 
 TLSStore 
