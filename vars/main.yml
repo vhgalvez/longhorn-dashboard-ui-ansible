@@ -22,3 +22,6 @@ vip_kubernetes: "192.168.0.32"  # Asegúrate de que esta dirección esté correc
 # ⚙️ Ruta del binario kubectl y kubeseal
 kubectl_path: "/usr/local/bin/kubectl"
 kubeseal_path: "/usr/local/bin/kubeseal"  # Asegúrate de que kubeseal esté correctamente instalado y accesible
+
+tls_cert_base64: "MIICjjCCAnOgAwIBAgIUW...TU_CADENA_BASE64_DEL_CERTIFICADO_REAL...D3Qj+q0j"
+tls_key_base64: "MIIEvQIBADANBgkqhkiG9w0BAQ...TU_CADENA_BASE64_DE_LA_CLAVE_PRIVADA_REAL...8oP6g=="
