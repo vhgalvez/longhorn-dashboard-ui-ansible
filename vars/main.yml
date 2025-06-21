@@ -2,7 +2,7 @@
 
 # 🔐 Credenciales de autenticación básica para el Longhorn Dashboard
 longhorn_auth_user: admin
-longhorn_auth_pass: SuperSecure456
+longhorn_auth_pass: SuperSecure456  # Considera usar un sistema de gestión de secretos para mayor seguridad
 
 # 🌐 Dominio y namespace donde se desplegará el Dashboard
 domain: longhorn.socialdevs.site
@@ -14,10 +14,11 @@ secret_name: longhorn-dashboard-auth
 
 # 📁 Ruta del kubeconfig y token de acceso al clúster (usado por kubectl/kubeseal)
 kubeconfig_path: "/home/victory/.kube/config"
-kubeconfig_token_path: "/home/victory/.kube/token.jwt"
+kubeconfig_token_path: "/home/victory/.kube/token.jwt"  # Asegúrate de que este archivo esté bien protegido
 
 # 📡 Dirección VIP del clúster Kubernetes (útil para balanceo o HA)
-vip_kubernetes: "192.168.0.32"
+vip_kubernetes: "192.168.0.32"  # Asegúrate de que esta dirección esté correctamente configurada y accesible
 
-# ⚙️ Ruta del binario kubectl
+# ⚙️ Ruta del binario kubectl y kubeseal
 kubectl_path: "/usr/local/bin/kubectl"
+kubeseal_path: "/usr/local/bin/kubeseal"  # Asegúrate de que kubeseal esté correctamente instalado y accesible
