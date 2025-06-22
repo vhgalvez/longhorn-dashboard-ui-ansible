@@ -3,43 +3,40 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: ingressroute-longhorn-internal
-  namespace: {{ longhorn_namespace | default("longhorn-system") }}
+  namespace: longhorn-system
   labels:
     app.kubernetes.io/name: longhorn
     app.kubernetes.io/component: ingress
-    access: internal
     environment: prod
   annotations:
-    maintained-by: devops@socialdevs.site
     created-by: ansible
+    maintained-by: devops@socialdevs.site
 spec:
   entryPoints:
-    - websecure                       # HTTPS
-
+    - websecure
   routes:
-    - match: "Host(`{{ domain | default('longhorn.socialdevs.site') }}`) && PathPrefix(`/`)"
+    - match: Host(`{{ longhorn_dashboard_domain }}`) && PathPrefix(`/`)
       kind: Rule
-      middlewares:
-        - name: {{ middleware_name | default("longhorn-dashboard-auth") }}
-          namespace: {{ longhorn_namespace | default("longhorn-system") }}
       services:
         - name: longhorn-frontend
           port: 80
           scheme: http
-
-    - match: "Host(`{{ domain | default('longhorn.socialdevs.site') }}`) && PathPrefix(`/dashboard`)"
-      kind: Rule
       middlewares:
-        - name: {{ middleware_name | default("longhorn-dashboard-auth") }}
-          namespace: {{ longhorn_namespace | default("longhorn-system") }}
+        - name: longhorn-dashboard-auth
+          namespace: longhorn-system
+    - match: Host(`{{ longhorn_dashboard_domain }}`) && PathPrefix(`/dashboard`)
+      kind: Rule
+      services:
+        - name: longhorn-frontend
+          port: 80
+          scheme: http
+      middlewares:
+        - name: longhorn-dashboard-auth
+          namespace: longhorn-system
         - name: strip-prefix-dashboard
-          namespace: {{ longhorn_namespace | default("longhorn-system") }}
-      services:
-        - name: longhorn-frontend
-          port: 80
-          scheme: http
-
+          namespace: longhorn-system
   tls:
-    # Usamos el TLSStore 'default' que vive en el namespace kube-system
+    secretName: wildcard-socialdevs-tls
     options:
-      name: kube-system-default@kubernetescrd
+      name: default
+      namespace: kube-system
