@@ -1,31 +1,34 @@
 # vars/main.yml
 
-# Credenciales de autenticación básica para el Longhorn Dashboard
-# **Recomendación: Usar un sistema de gestión de secretos para mayor seguridad**
-longhorn_auth_user: "{{ lookup('env', 'LONGHORN_AUTH_USER') }}" # Obtención desde la variable de entorno
-longhorn_auth_pass: "{{ lookup('env', 'LONGHORN_AUTH_PASS') }}" # Obtención desde la variable de entorno
+# vars/main.yml
 
-# Dominio y namespace donde se desplegará el Dashboard
+# 🔐 Credenciales de autenticación básica para el Longhorn Dashboard
+# Se obtienen de variables de entorno por seguridad
+longhorn_auth_user: "{{ lookup('env', 'LONGHORN_AUTH_USER') }}"
+longhorn_auth_pass: "{{ lookup('env', 'LONGHORN_AUTH_PASS') }}"
+
+# 🌐 Dominio y namespace del Dashboard
 domain: longhorn.socialdevs.site
+longhorn_dashboard_domain: "{{ domain }}"
 longhorn_namespace: longhorn-system
 
-# Nombres del Middleware y Secret sellado
+# 🔒 Nombres del Middleware y del Secret sellado
 middleware_name: longhorn-dashboard-auth
 secret_name: longhorn-dashboard-auth
 
-# Ruta del kubeconfig y token de acceso al clúster (usado por kubectl/kubeseal)
+# 🔑 Ruta del kubeconfig y token de acceso al clúster
 kubeconfig_path: "/home/victory/.kube/config"
-kubeconfig_token_path: "/home/victory/.kube/token.jwt" # Asegúrate de que este archivo esté bien protegido
+kubeconfig_token_path: "/home/victory/.kube/token.jwt"  # Protege bien este archivo
 
-# Dirección VIP del clúster Kubernetes (útil para balanceo o HA)
-vip_kubernetes: "192.168.0.32" # Asegúrate de que esta dirección esté correctamente configurada y accesible
+# 💡 Dirección VIP del clúster Kubernetes (balanceo de carga o HA)
+vip_kubernetes: "192.168.0.32"
 
-# Ruta del binario kubectl y kubeseal
+# 🧰 Rutas de herramientas CLI necesarias
 kubectl_path: "/usr/local/bin/kubectl"
-kubeseal_path: "/usr/local/bin/kubeseal" # Asegúrate de que kubeseal esté correctamente instalado y accesible
+kubeseal_path: "/usr/local/bin/kubeseal"
 
-# TLS Secret creado en Kubernetes
-tls_secret_name: wildcard-socialdevs-tls # El Secret TLS que contiene el certificado y la clave privada
+# 🔐 TLS: Secret que contiene el certificado wildcard
+tls_secret_name: wildcard-socialdevs-tls
 
-# Configuración opcional de redirección automática HTTP -> HTTPS
-http_to_https_redirect: true # Si deseas redirigir automáticamente todo el tráfico HTTP a HTTPS
+# 🌍 Configuración opcional: redirección de HTTP a HTTPS
+http_to_https_redirect: true
