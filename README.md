@@ -107,6 +107,5 @@ TLSStore
 source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
 
 
-
-
+source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
 
