@@ -19,7 +19,7 @@ spec:
       kind: Rule
       services:
         - name: longhorn-frontend
-          port: 80
+          port: 8000
           scheme: http
       middlewares:
         - name: longhorn-dashboard-auth
@@ -28,7 +28,7 @@ spec:
       kind: Rule
       services:
         - name: longhorn-frontend
-          port: 80
+          port: 8000
           scheme: http
       middlewares:
         - name: longhorn-dashboard-auth
