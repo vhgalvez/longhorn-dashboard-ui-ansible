@@ -110,3 +110,10 @@ source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-p
 
 source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
 
+
+# ( carga usuario/contraseña desde .env )
+source .env
+export ARGOCD_AUTH_USER="$ARGOCD_AUTH_USER" \
+       ARGOCD_AUTH_PASS="$ARGOCD_ADMIN_PASSWORD"
+
+sudo -E ansible-playbook -i inventory/hosts.ini playbooks/deploy_argocd_full.yml
