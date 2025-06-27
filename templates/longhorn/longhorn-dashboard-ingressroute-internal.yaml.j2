@@ -24,17 +24,6 @@ spec:
       middlewares:
         - name: longhorn-dashboard-auth
           namespace: longhorn-system
-    - match: Host(`{{ longhorn_dashboard_domain }}`) && PathPrefix(`/dashboard`)
-      kind: Rule
-      services:
-        - name: longhorn-frontend
-          port: 80
-          scheme: http
-      middlewares:
-        - name: longhorn-dashboard-auth
-          namespace: longhorn-system
-        - name: strip-prefix-dashboard
-          namespace: longhorn-system
   tls:
     store:
       name: default
