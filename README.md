@@ -97,7 +97,7 @@ ansible-playbook -i inventory/hosts.ini playbooks/02_ingress-longhorn-internal.y
 
 
 export LONGHORN_AUTH_USER=admin
-export LONGHORN_AUTH_PASS='SuperPassword123'
+export LONGHORN_AUTH_PASS='SuperPassword123
 
 TLS global 
 TLSStore 
