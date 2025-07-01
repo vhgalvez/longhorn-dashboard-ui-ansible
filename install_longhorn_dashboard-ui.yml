@@ -15,43 +15,37 @@
 - import_playbook: playbooks/01_generate-auth-secret.yml
 - import_playbook: playbooks/02_ingress-longhorn-internal.yml
 
-# 🌐 Verificación tolerante de acceso al dashboard
+# 🌐 Otras tareas previas a la verificación del Dashboard
+- name: 🔍 Verificar si el IngressRoute está correctamente aplicado
+  shell: >
+    {{ kubectl_path }} get ingressroute ingressroute-longhorn-internal -n {{ longhorn_namespace | default("longhorn-system") }} --kubeconfig {{ kubeconfig_path }}
+  register: ingress_check
+  changed_when: false
+
+- name: 🧾 Mostrar el estado del IngressRoute
+  debug:
+    msg: "Estado del IngressRoute: {{ ingress_check.stdout }}"
+
+# 🌐 Verificación tolerante de acceso al dashboard (se mueve al final)
 - name: 🌐 Verificar acceso al Dashboard (modo tolerante)
-  hosts: localhost
-  gather_facts: false
-  vars_files:
-    - vars/main.yml
+  shell: >
+    curl --http1.1 -k -u {{ longhorn_auth_user }}:{{ longhorn_auth_pass }}
+    https://{{ domain }}/dashboard/
+    --max-time 10 --silent --output /dev/null --write-out '%{http_code}'
+  environment:
+    KUBECONFIG: "{{ kubeconfig_path }}"
+  register: dashboard_access_check
+  retries: 5  # Número de reintentos
+  delay: 10  # Retardo entre los intentos (en segundos)
+  changed_when: false
+  failed_when: dashboard_access_check.stdout is defined and
+    dashboard_access_check.stdout not in ["200", "302", "401"]
 
-  tasks:
-    - name: 🌐 Verificar acceso al Dashboard (modo tolerante)
-      shell: >
-        curl --http1.1 -k -u {{ longhorn_auth_user }}:{{ longhorn_auth_pass }}
-        https://{{ domain }}/dashboard/
-        --max-time 10 --silent --output /dev/null --write-out '%{http_code}'
-      environment:
-        KUBECONFIG: "{{ kubeconfig_path }}"
-      register: dashboard_access_check
-      failed_when: >
-        dashboard_access_check.stdout is defined and
-        dashboard_access_check.stdout not in ["200", "302", "401"]
-      changed_when: false
-      ignore_errors: false
+- name: 🛠️ Depuración de acceso al dashboard
+  debug:
+    msg: "Código HTTP recibido del dashboard: {{ dashboard_access_check.stdout }}"
 
-    - name: 🛠️ Depuración de acceso al dashboard
-      debug:
-        msg: "Código HTTP recibido del dashboard: {{ dashboard_access_check.stdout }}"
-
-    - name: ❌ Fallar si no se puede acceder al dashboard
-      fail:
-        msg: "El acceso al dashboard falló. Código HTTP: {{ dashboard_access_check.stdout }}"
-      when: dashboard_access_check.stdout not in ["200", "302", "401"]
-      
-    - name: 🔍 Verificar si el IngressRoute está correctamente aplicado
-      shell: >
-        {{ kubectl_path }} get ingressroute ingressroute-longhorn-internal -n {{ longhorn_namespace | default("longhorn-system") }} --kubeconfig {{ kubeconfig_path }}
-      register: ingress_check
-      changed_when: false
-
-    - name: 🧾 Mostrar el estado del IngressRoute
-      debug:
-        msg: "Estado del IngressRoute: {{ ingress_check.stdout }}"
+- name: ❌ Fallar si no se puede acceder al dashboard después de los reintentos
+  fail:
+    msg: "El acceso al dashboard falló después de 5 intentos. Código HTTP: {{ dashboard_access_check.stdout }}"
+  when: dashboard_access_check.stdout not in ["200", "302", "401"]
