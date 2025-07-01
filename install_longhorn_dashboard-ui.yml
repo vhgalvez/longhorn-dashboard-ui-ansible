@@ -16,7 +16,7 @@
 - import_playbook: playbooks/01_generate-auth-secret.yml
 - import_playbook: playbooks/02_ingress-longhorn-internal.yml
 
-# 🌐 Otras tareas previas a la verificación del Dashboard
+# 🌐 Verificación tolerante de acceso al dashboard
 - name: 🌐 Verificar acceso al Dashboard (modo tolerante)
   hosts: localhost
   gather_facts: false
@@ -32,8 +32,8 @@
       environment:
         KUBECONFIG: "{{ kubeconfig_path }}"
       register: dashboard_access_check
-      retries: 5  # Número de reintentos
-      delay: 10  # Retardo entre los intentos (en segundos)
+      retries: 10  # Aumentamos el número de reintentos a 10
+      delay: 15  # Aumentamos el retardo entre intentos a 15 segundos
       changed_when: false
       failed_when: dashboard_access_check.stdout is defined and
         dashboard_access_check.stdout not in ["200", "302", "401"]
@@ -44,7 +44,7 @@
 
     - name: ❌ Fallar si no se puede acceder al dashboard después de los reintentos
       fail:
-        msg: "El acceso al dashboard falló después de 5 intentos. Código HTTP: {{ dashboard_access_check.stdout }}"
+        msg: "El acceso al dashboard falló después de 10 intentos. Código HTTP: {{ dashboard_access_check.stdout }}"
       when: dashboard_access_check.stdout not in ["200", "302", "401"]
 
     - name: 🔍 Verificar si el IngressRoute está correctamente aplicado
