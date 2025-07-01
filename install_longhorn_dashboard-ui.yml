@@ -29,14 +29,12 @@
         curl --http1.1 -k -u {{ longhorn_auth_user }}:{{ longhorn_auth_pass }}
         https://{{ longhorn_dashboard_domain }}/dashboard/
         --max-time 10 --silent --output /dev/null --write-out '%{http_code}'
-      environment:
-        KUBECONFIG: "{{ kubeconfig_path }}"
       register: dashboard_access_check
-      retries: 10 # Número de reintentos (puedes aumentarlo según sea necesario)
+      retries: 10 # Número de reintentos
       delay: 15 # Retardo entre los intentos (en segundos)
       changed_when: false
       failed_when: dashboard_access_check.stdout is defined and
-        dashboard_access_check.stdout not in ["200", "302", "401"]
+        dashboard_access_check.stdout not in ["200", "302", "307", "401"]
 
     - name: 🛠️ Depuración de acceso al dashboard de Longhorn
       debug:
@@ -45,4 +43,4 @@
     - name: ❌ Fallar si no se puede acceder al dashboard de Longhorn después de los reintentos
       fail:
         msg: "El acceso al dashboard de Longhorn falló después de 10 intentos. Código HTTP: {{ dashboard_access_check.stdout }}"
-      when: dashboard_access_check.stdout not in ["200", "302", "401"]
+      when: dashboard_access_check.stdout not in ["200", "302", "307", "401"]
