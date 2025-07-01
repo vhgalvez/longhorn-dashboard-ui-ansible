@@ -17,7 +17,7 @@
 - import_playbook: playbooks/02_ingress-longhorn-internal.yml
 
 # 🌐 Verificación tolerante de acceso al dashboard
-- name: 🌐 Verificar acceso al Dashboard (modo tolerante)
+- name: 🌐 Verificar acceso al Dashboard de Longhorn (modo tolerante)
   hosts: localhost
   gather_facts: false
   vars_files:
@@ -44,3 +44,13 @@
       fail:
         msg: "El acceso al dashboard de Longhorn falló después de 10 intentos. Código HTTP: {{ dashboard_access_check.stdout }}"
       when: dashboard_access_check.stdout not in ["200", "302", "307", "401"]
+
+    - name: 🕒 Esperar a que Longhorn esté completamente desplegado
+      pause:
+        minutes: 1 # Esperar 1 minuto antes de verificar el acceso
+      when: dashboard_access_check.stdout not in ["200", "302", "307", "401"]
+
+    - name: 🚀 Confirmar acceso exitoso al Dashboard de Longhorn
+      debug:
+        msg: "El dashboard de Longhorn está accesible correctamente."
+      when: dashboard_access_check.stdout in ["200", "302", "307"]
