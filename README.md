@@ -1,14 +1,20 @@
 # longhorn-dashboard-ui-ansible
 
-longhorn-dashboard-ui-ansible
+Este proyecto utiliza Ansible para desplegar y gestionar el dashboard de Longhorn en tu entorno.
+
+---
 
 ## Instalación
 
-Para instalar este proyecto, ejecute el siguiente comando utilizando Ansible:
+Para instalar este proyecto, ejecuta el siguiente comando utilizando Ansible:
 
 ```bash
-sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
+source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
 ```
+
+Este comando aplicará las configuraciones necesarias para desplegar el dashboard de Longhorn.
+
+---
 
 ## Desinstalación
 
@@ -18,30 +24,17 @@ Para desinstalar el dashboard de Longhorn, utiliza el siguiente comando:
 source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook uninstall_longhorn_dashboard-ui.yml
 ```
 
-curl -v -k --http1.1 -u admin:SuperSecure456 https://longhorn.socialdevs.site/dashboard/
+---
 
-curl -k -u admin:SuperSecure456 https://longhorn.socialdevs.site/dashboard/
+## Configuración del Archivo `.env`
 
-Este comando aplicará las configuraciones necesarias para desplegar el dashboard de Longhorn en su entorno.
+El archivo `.env` es utilizado para definir las variables de entorno necesarias para los playbooks de Ansible. Sigue estos pasos para crearlo:
 
-#### Ejemplo de configuración de IngressRoute
+### Paso 1: Crear el archivo `.env`
 
-```yaml
-tls: {} # sin secretName
-# Traefik usará el defaultCertificate del TLSStore global.
-```
-
-### Creación del Archivo .env
-
-El archivo `.env` es utilizado para definir las variables de entorno que se usarán en los playbooks de Ansible. Sigue estos pasos para crearlo:
-
-#### Paso 1: Crear el archivo .env
-
-Abre tu terminal.
-
-Navega al directorio donde deseas crear el archivo `.env`.
-
-Crea el archivo `.env` con el siguiente contenido:
+1. Abre tu terminal.
+2. Navega al directorio donde deseas crear el archivo `.env`.
+3. Crea el archivo `.env` con el siguiente contenido:
 
 ```bash
 sudo nano .env
@@ -57,17 +50,15 @@ LONGHORN_AUTH_PASS=SuperSecure456
 
 Guarda y cierra el archivo presionando `Ctrl + X`, luego `Y` para confirmar y `Enter`.
 
-#### Paso 2: Cargar las Variables de Entorno
+### Paso 2: Cargar las Variables de Entorno
 
-Una vez creado el archivo `.env`, debes cargar las variables de entorno para que estén disponibles en tu sesión de terminal y sean accesibles para los playbooks de Ansible.
-
-Usa el siguiente comando para cargar las variables de entorno desde el archivo `.env`:
+Una vez creado el archivo `.env`, carga las variables de entorno para que estén disponibles en tu sesión de terminal:
 
 ```bash
 export $(cat .env | xargs)
 ```
 
-Para verificar que las variables se cargaron correctamente, puedes usar:
+Para verificar que las variables se cargaron correctamente, usa:
 
 ```bash
 echo $LONGHORN_AUTH_USER
@@ -76,36 +67,39 @@ echo $LONGHORN_AUTH_PASS
 
 Si las variables muestran los valores correctos, significa que se cargaron correctamente.
 
-### Ejecutar el Playbook de Ansible
+---
 
-Ahora que las variables de entorno están cargadas, puedes ejecutar los playbooks de Ansible utilizando esas variables.
+## Ejecución de Playbooks de Ansible
 
-#### Ejemplo de ejecución del playbook
+### Ejemplo de Ejecución
+
+Con las variables de entorno cargadas, puedes ejecutar los playbooks de Ansible. Por ejemplo:
 
 ```bash
 ansible-playbook -i inventory/hosts.ini playbooks/02_ingress-longhorn-internal.yml
 ```
 
-export LONGHORN_AUTH_USER="admin"
-export LONGHORN_AUTH_PASS="SuperPassword123"
+---
 
-TLS global
-TLSStore
+## Ejemplo de Configuración de `IngressRoute`
 
-# Desinstalar
+Si necesitas configurar un `IngressRoute`, aquí tienes un ejemplo:
 
-```bash
-source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS &&  sudo -E ansible-playbook uninstall_longhorn_dashboard-ui.yml
+```yaml
+tls: {}  # sin secretName
+# Traefik usará el defaultCertificate del TLSStore global.
 ```
 
-source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
+---
 
-source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
+## Ejemplo de Uso con `curl`
 
-# ( carga usuario/contraseña desde .env )
+Puedes probar el acceso al dashboard de Longhorn utilizando `curl`:
 
-source .env
-export ARGOCD_AUTH_USER="$ARGOCD_AUTH_USER" \
-       ARGOCD_AUTH_PASS="$ARGOCD_ADMIN_PASSWORD"
+```bash
+curl -v -k --http1.1 -u admin:SuperSecure456 https://longhorn.socialdevs.site/dashboard/
+```
 
-sudo -E ansible-playbook -i inventory/hosts.ini playbooks/deploy_argocd_full.yml
+---
+
+Este archivo ha sido optimizado para eliminar redundancias, corregir errores y mejorar la claridad de las instrucciones.
