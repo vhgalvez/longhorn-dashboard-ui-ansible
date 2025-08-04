@@ -1,4 +1,5 @@
 # longhorn-dashboard-ui-ansible
+
 longhorn-dashboard-ui-ansible
 
 ## Instalación
@@ -9,9 +10,6 @@ Para instalar este proyecto, ejecute el siguiente comando utilizando Ansible:
 sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
 ```
 
-
-
-
 ## Desinstalación
 
 Para desinstalar el dashboard de Longhorn, utiliza el siguiente comando:
@@ -20,25 +18,16 @@ Para desinstalar el dashboard de Longhorn, utiliza el siguiente comando:
 source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook uninstall_longhorn_dashboard-ui.yml
 ```
 
-
 curl -v -k --http1.1 -u admin:SuperSecure456 https://longhorn.socialdevs.site/dashboard/
 
 curl -k -u admin:SuperSecure456 https://longhorn.socialdevs.site/dashboard/
 
-
-
-
-
-
-
 Este comando aplicará las configuraciones necesarias para desplegar el dashboard de Longhorn en su entorno.
-
-
 
 #### Ejemplo de configuración de IngressRoute
 
 ```yaml
-tls: {}  # sin secretName
+tls: {} # sin secretName
 # Traefik usará el defaultCertificate del TLSStore global.
 ```
 
@@ -97,14 +86,11 @@ Ahora que las variables de entorno están cargadas, puedes ejecutar los playbook
 ansible-playbook -i inventory/hosts.ini playbooks/02_ingress-longhorn-internal.yml
 ```
 
-
 export LONGHORN_AUTH_USER="admin"
 export LONGHORN_AUTH_PASS="SuperPassword123"
 
-
-TLS global 
-TLSStore 
-
+TLS global
+TLSStore
 
 # Desinstalar
 
@@ -112,16 +98,12 @@ TLSStore
 source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS &&  sudo -E ansible-playbook uninstall_longhorn_dashboard-ui.yml
 ```
 
-
-
-
 source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
 
-
 source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
-
 
 # ( carga usuario/contraseña desde .env )
+
 source .env
 export ARGOCD_AUTH_USER="$ARGOCD_AUTH_USER" \
        ARGOCD_AUTH_PASS="$ARGOCD_ADMIN_PASSWORD"
