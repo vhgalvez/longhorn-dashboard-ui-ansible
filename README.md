@@ -14,8 +14,10 @@ sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
 
 ## Desinstalación
 
+Para desinstalar el dashboard de Longhorn, utiliza el siguiente comando:
+
 ```bash
-sudo -E ansible-playbook uninstall_longhorn_dashboard-ui.yml
+source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook uninstall_longhorn_dashboard-ui.yml
 ```
 
 
@@ -102,6 +104,14 @@ export LONGHORN_AUTH_PASS="SuperPassword123"
 
 TLS global 
 TLSStore 
+
+
+# Desinstalar
+
+```bash
+source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS &&  sudo -E ansible-playbook uninstall_longhorn_dashboard-ui.yml
+```
+
 
 
 
