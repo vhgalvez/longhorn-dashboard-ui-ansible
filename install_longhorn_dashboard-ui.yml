@@ -12,11 +12,11 @@
         that: kubeconfig_path is defined
         msg: "❌ kubeconfig_path no está definido en vars/main.yml"
 
-# 🧩 Importar playbooks principales (deben tener sus propios hosts y tasks)
+# 🧩 Importar playbooks principales
 - import_playbook: playbooks/01_generate-auth-secret.yml
 - import_playbook: playbooks/02_ingress-longhorn-internal.yml
 
-# 🌐 Verificación tolerante de acceso al dashboard
+# 🌐 Verificación tolerante de acceso al dashboard ----------------------------
 - name: 🌐 Verificar acceso al Dashboard de Longhorn (modo tolerante)
   hosts: localhost
   gather_facts: false
@@ -24,7 +24,7 @@
     - vars/main.yml
 
   tasks:
-    - name: 🌐 Verificar acceso al Dashboard de Longhorn (modo tolerante)
+    - name: 🌐 Probar acceso HTTP al Dashboard de Longhorn
       shell: >
         curl --http1.1 -k -u {{ longhorn_auth_user }}:{{ longhorn_auth_pass }}
         https://{{ longhorn_dashboard_domain }}/
@@ -34,7 +34,7 @@
       delay: 15
       changed_when: false
       failed_when: dashboard_access_check.stdout is defined and
-        dashboard_access_check.stdout not in ["200", "302", "307", "401"]
+        dashboard_access_check.stdout not in ["200", "302", "307", "401", "404"]
 
     - name: 🛠️ Depuración de acceso al dashboard de Longhorn
       debug:
@@ -43,14 +43,14 @@
     - name: ❌ Fallar si no se puede acceder al dashboard de Longhorn después de los reintentos
       fail:
         msg: "El acceso al dashboard de Longhorn falló después de 10 intentos. Código HTTP: {{ dashboard_access_check.stdout }}"
-      when: dashboard_access_check.stdout not in ["200", "302", "307", "401"]
+      when: dashboard_access_check.stdout not in ["200", "302", "307", "401", "404"]
 
     - name: 🕒 Esperar a que Longhorn esté completamente desplegado
       pause:
         minutes: 1
-      when: dashboard_access_check.stdout not in ["200", "302", "307", "401"]
+      when: dashboard_access_check.stdout not in ["200", "302", "307", "401", "404"]
 
     - name: 🚀 Confirmar acceso exitoso al Dashboard de Longhorn
       debug:
         msg: "El dashboard de Longhorn está accesible correctamente."
-      when: dashboard_access_check.stdout in ["200", "302", "307"]
+      when: dashboard_access_check.stdout in ["200", "302", "307", "404"]

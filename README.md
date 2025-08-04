@@ -9,7 +9,7 @@ Este proyecto utiliza Ansible para desplegar y gestionar el dashboard de Longhor
 Para instalar este proyecto, ejecuta el siguiente comando utilizando Ansible:
 
 ```bash
-source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook install_longhorn_dashboard-ui.yml
+sudo bash -c 'source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook install_longhorn_dashboard-ui.yml'
 ```
 
 Este comando aplicará las configuraciones necesarias para desplegar el dashboard de Longhorn.
@@ -21,7 +21,7 @@ Este comando aplicará las configuraciones necesarias para desplegar el dashboar
 Para desinstalar el dashboard de Longhorn, utiliza el siguiente comando:
 
 ```bash
-source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook uninstall_longhorn_dashboard-ui.yml
+sudo bash -c 'source .env && export LONGHORN_AUTH_USER LONGHORN_AUTH_PASS && sudo -E ansible-playbook uninstall_longhorn_dashboard-ui.yml'
 ```
 
 ---
@@ -76,7 +76,7 @@ Si las variables muestran los valores correctos, significa que se cargaron corre
 Con las variables de entorno cargadas, puedes ejecutar los playbooks de Ansible. Por ejemplo:
 
 ```bash
-ansible-playbook -i inventory/hosts.ini playbooks/02_ingress-longhorn-internal.yml
+sudo ansible-playbook -i inventory/hosts.ini playbooks/02_ingress-longhorn-internal.yml
 ```
 
 ---
